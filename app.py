@@ -14,29 +14,35 @@ def procesar_audio_en_memoria(file,filtro):
     if len(audio.shape)>1:
         audio=audio[:,0]
 
-    if filtro=="Filtro 1":
+    if filtro=="bitcrusher":
         resultado=aplicar_bitcrusher(audio,sr,bits=4)
 
-    elif filtro=="Filtro 2":
+    elif filtro=="chopper":
         resultado=aplicar_chopper(audio,sr,velocidad=20)
 
-    elif filtro=="Filtro 3":
+    elif filtro=="stutter":
         resultado=aplicar_stutter(audio,sr)
 
-    elif filtro=="Filtro 4":
+    elif filtro=="robot":
         resultado=aplicar_robot(audio,sr)
 
-    elif filtro=="Filtro 5":
+    elif filtro=="downsampling":
         resultado=aplicar_downsampling(audio,sr,reduccion=15)
         
-    elif filtro=="Filtro 6":
-        resultado=aplicar_downsampling(audio,sr,reduccion=15)
+    elif filtro=="reverse":
+        resultado=aplicar_reverse(audio,sr)
         
-    elif filtro=="Filtro 7":
-        resultado=aplicar_downsampling(audio,sr,reduccion=15)    
+    elif filtro=="playback_rate":
+        resultado=aplicar_playback_rate(audio,sr,rate=1.0)    
         
-    elif filtro=="Filtro 8":
-        resultado=aplicar_downsampling(audio,sr,reduccion=15)
+    elif filtro=="panning":
+        resultado=aplicar_panning(audio, sr, pan=0.0)
+        
+    elif filtro=="tremolo":
+        resultado=aplicar_tremolo(audio, sr, frecuencia=5.0, profundidad=0.5) 
+        
+    elif filtro=="delay":
+        resultado=aplicar_delay(audio, sr, delay_ms=300, gain=0.4)
 
     else:
         resultado=audio
