@@ -4,48 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VoiceMod Studio</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Iconos de Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
         body { background-color: #f8f9fa; }
-        
-        .filter-card {
-            cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s;
-            border: 1px solid rgba(0,0,0,.125);
-        }
-        
-        .filter-card:hover {
-            transform: translateY(-5px);
-            border-color: #0d6efd;
-        }
-        
-        /* Clase para cuando se selecciona un filtro */
-        .filter-card.active {
-            background-color: #0d6efd !important;
-            color: white;
-            border-color: #0d6efd;
-        }
-
-        .upload-area {
-            border: 2px dashed #ccc;
-            border-radius: 15px;
-            padding: 40px;
-            text-align: center;
-            background: white;
-        }
-
-        /* Ocultar el resultado al principio */
-        #resultado {
-            display: none;
-            margin-top: 40px;
-            padding: 20px;
-            background: white;
-            border-radius: 15px;
-            border: 1px solid #dee2e6;
-        }
+        .filter-card { cursor: pointer; transition: transform 0.2s, border-color 0.2s; border: 1px solid rgba(0,0,0,.125); }
+        .filter-card:hover { transform: translateY(-5px); border-color: #0d6efd; }
+        .filter-card.active { background-color: #0d6efd !important; color: white; border-color: #0d6efd; }
+        .upload-area { border: 2px dashed #ccc; border-radius: 15px; padding: 40px; text-align: center; background: white; }
+        #resultado { display: none; margin-top: 40px; padding: 20px; background: white; border-radius: 15px; border: 1px solid #dee2e6; }
+        .recording-active { animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); background-color: #dc3545; } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -58,90 +27,56 @@
 
 <div class="container pb-5">
     <div class="row justify-content-center">
-        <!-- Columna de Carga -->
         <div class="col-md-8 mb-4">
             <div class="upload-area shadow-sm">
-                <i class="bi bi-cloud-arrow-up-fill display-1 text-primary"></i>
-                <h3 class="mt-3">Carga tu audio</h3>
-                <p class="text-muted">Arrastra tu archivo .mp3 o .wav aquí</p>
-                <input type="file" class="form-control" id="audioInput" accept="audio/*">
-            </div>
-        </div>
-
-        <!-- Panel de Filtros (8 Filtros) -->
-    <div class="col-md-11"> <h4 class="mb-3 text-center">Selecciona un Filtro</h4>
-        <div class="row g-3 justify-content-center row-cols-2 row-cols-md-5">
-            <div class="col">
-                <div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'bitcrusher')">
-                    <span>Bitcrusher</span>
+                <i class="bi bi-cloud-arrow-up-fill display-1 text-primary" id="uploadIcon"></i>
+                <h3 class="mt-3">Carga tu audio o Graba en vivo</h3>
+                <p class="text-muted">Arrastra tu archivo .mp3 o .wav aquí o usa el micrófono</p>
+                
+                <div class="row g-2 justify-content-center align-items-center mb-3">
+                    <div class="col-sm-8">
+                        <input type="file" class="form-control" id="audioInput" accept="audio/*">
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-outline-danger w-100" id="btnGrabar">
+                            <i class="bi bi-mic-fill me-2"></i>Grabar
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="col">
-                <div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'chopper')">
-                    <span>Chopper</span>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'stutter')">
-                    <span>Stutter</span>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'robot')">
-                    <span>Robot</span>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'downsampling')">
-                    <span>Downsampling</span>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'reverse')">
-                    <span>Reverse</span>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'playback_rate')">
-                    <span>Playback rate</span>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'panning')">
-                    <span>Panning</span>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'tremolo')">
-                    <span>Tremolo</span>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'delay')">
-                    <span>Delay</span>
+                <div id="statusGrabacion" class="text-danger fw-bold d-none">
+                    <span class="spinner-grow spinner-grow-sm me-2" role="status"></span>Grabando... Haz clic de nuevo para detener.
                 </div>
             </div>
         </div>
-    </div>
 
-        <!-- Botón de Acción -->
+        <div class="col-md-11"> 
+            <h4 class="mb-3 text-center">Selecciona un Filtro</h4>
+            <div class="row g-3 justify-content-center row-cols-2 row-cols-md-5">
+                <div class="col"><div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'bitcrusher')"><span>Bitcrusher</span></div></div>
+                <div class="col"><div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'chopper')"><span>Chopper</span></div></div>
+                <div class="col"><div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'stutter')"><span>Stutter</span></div></div>
+                <div class="col"><div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'robot')"><span>Robot</span></div></div>
+                <div class="col"><div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'downsampling')"><span>Downsampling</span></div></div>
+                <div class="col"><div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'reverse')"><span>Reverse</span></div></div>
+                <div class="col"><div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'playback_rate')"><span>Playback rate</span></div></div>
+                <div class="col"><div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'panning')"><span>Panning</span></div></div>
+                <div class="col"><div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'tremolo')"><span>Tremolo</span></div></div>
+                <div class="col"><div class="card filter-card text-center p-3 shadow-sm" onclick="seleccionarFiltro(this, 'delay')"><span>Delay</span></div></div>
+            </div>
+        </div>
+
         <div class="col-md-10 text-center mt-5">
             <button class="btn btn-primary btn-lg px-5 shadow" id="btnProcesar">
                 <i class="bi bi-magic me-2"></i>Aplicar Filtro
             </button>
         </div>
 
-        <!-- Sección de Reproductor (Se muestra al procesar) -->
         <div class="col-md-8" id="resultado">
             <div class="text-center">
                 <h5 class="mb-3 text-success font-monospace">RESULTADO: <span id="nombreFiltroAplicado"></span></h5>
-                <audio id="audioReproductor" controls class="w-100 mb-3">
-                    Tu navegador no soporta el audio.
-                </audio>
+                <audio id="audioReproductor" controls class="w-100 mb-3">Tu navegador no soporta el audio.</audio>
                 <br>
-                <a href="#" class="btn btn-outline-dark btn-sm">
-                    <i class="bi bi-download"></i> Descargar Audio
-                </a>
+                <a href="#" class="btn btn-outline-dark btn-sm"><i class="bi bi-download"></i> Descargar Audio</a>
             </div>
         </div>
     </div>
@@ -151,63 +86,187 @@
     <small>VoiceLab Studio 2026 - Frontend Design</small>
 </footer>
 
-<!-- JavaScript para la lógica visual -->
 <script>
     let filtroSeleccionado = "";
+    let mediaRecorder;
+    let fragmentosAudio = [];
+    let audioGrabadoBlob = null; 
 
     function seleccionarFiltro(elemento, nombre) {
-        // Quitar clase activa de todos los filtros
         const cards = document.querySelectorAll('.filter-card');
         cards.forEach(card => card.classList.remove('active'));
-        
-        // Añadir clase activa al seleccionado
         elemento.classList.add('active');
         filtroSeleccionado = nombre;
     }
 
+    const btnGrabar = document.getElementById('btnGrabar');
+    const statusGrabacion = document.getElementById('statusGrabacion');
+    const uploadIcon = document.getElementById('uploadIcon');
+    const audioInput = document.getElementById('audioInput');
+
+    audioInput.addEventListener('change', () => {
+        if (audioInput.files.length > 0) {
+            audioGrabadoBlob = null;
+            btnGrabar.className = "btn btn-outline-danger w-100";
+            btnGrabar.innerHTML = '<i class="bi bi-mic-fill me-2"></i>Grabar';
+            uploadIcon.className = "bi bi-cloud-arrow-up-fill display-1 text-primary";
+        }
+    });
+
+    btnGrabar.addEventListener('click', async () => {
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+            return;
+        }
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            fragmentosAudio = [];
+
+            mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) fragmentosAudio.push(e.data); };
+
+            mediaRecorder.onstop = async () => {
+                const blobFalso = new Blob(fragmentosAudio, { type: mediaRecorder.mimeType });
+                
+                // --- CONVERSIÓN EN CALIENTE A WAV PURO ---
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const arrayBuffer = await blobFalso.arrayBuffer();
+                
+                // Decodificamos el WebM/Ogg a muestras numéricas puras flotantes
+                const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+                
+                // Convertimos esas muestras a bytes WAV reales
+                audioGrabadoBlob = bufferToWav(audioBuffer);
+
+                audioInput.value = ""; 
+                statusGrabacion.classList.add('d-none');
+                btnGrabar.className = "btn btn-success w-100";
+                btnGrabar.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>¡Audio Grabado!';
+                uploadIcon.className = "bi bi-mic-fill display-1 text-success";
+                
+                stream.getTracks().forEach(track => track.stop());
+            };
+
+            mediaRecorder.start();
+            statusGrabacion.classList.remove('d-none');
+            btnGrabar.className = "btn btn-danger w-100 recording-active";
+            btnGrabar.innerHTML = '<i class="bi bi-stop-fill me-2"></i>Detener';
+
+        } catch (err) {
+            console.error("Error al acceder al micrófono:", err);
+            alert("Acceso denegado al micrófono.");
+        }
+    });
+
+    // Función matemática para estructurar un archivo binario WAV legítimo (RIFF)
+    function bufferToWav(buffer) {
+        let numOfChan = buffer.numberOfChannels,
+            sampleRate = buffer.sampleRate,
+            format = 1,         // PCM lineal
+            bitDepth = 16,      // 16 bits (int16 como quiere tu script de scipy)
+            result;
+        
+        let ch0 = buffer.getChannelData(0),
+            ch1 = numOfChan > 1 ? buffer.getChannelData(1) : ch0;
+            
+        let interleaved = numOfChan === 2 ? interleave(ch0, ch1) : ch0;
+        
+        let bufferLength = interleaved.length * 2;
+        let arrayBuffer = new ArrayBuffer(44 + bufferLength);
+        let view = new DataView(arrayBuffer);
+        
+        /* Cabecera RIFF */
+        writeString(view, 0, 'RIFF');
+        view.setUint32(4, 36 + bufferLength, true);
+        writeString(view, 8, 'WAVE');
+        /* Sub-chunk de formato */
+        writeString(view, 12, 'fmt ');
+        view.setUint32(16, 16, true);
+        view.setUint16(20, format, true);
+        view.setUint16(22, numOfChan, true);
+        view.setUint32(24, sampleRate, true);
+        view.setUint32(28, sampleRate * numOfChan * (bitDepth / 8), true);
+        view.setUint16(32, numOfChan * (bitDepth / 8), true);
+        view.setUint16(34, bitDepth, true);
+        /* Sub-chunk de datos */
+        writeString(view, 36, 'data');
+        view.setUint32(40, bufferLength, true);
+        
+        // Escribir las muestras como enteros de 16 bits válidos
+        floatTo16BitPCM(view, 44, interleaved);
+        
+        return new Blob([view], { type: 'audio/wav' });
+    }
+
+    function interleave(inputL, inputR) {
+        let length = inputL.length + inputR.length;
+        let result = new Float32Array(length);
+        let index = 0, inputIndex = 0;
+        while (index < length) {
+            result[index++] = inputL[inputIndex];
+            result[index++] = inputR[inputIndex];
+            inputIndex++;
+        }
+        return result;
+    }
+
+    function floatTo16BitPCM(output, offset, input) {
+        for (let i = 0; i < input.length; i++, offset += 2) {
+            let s = Math.max(-1, Math.min(1, input[i]));
+            output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+        }
+    }
+
+    function writeString(view, offset, string) {
+        for (let i = 0; i < string.length; i++) {
+            view.setUint8(offset + i, string.charCodeAt(i));
+        }
+    }
+
     document.getElementById('btnProcesar').addEventListener('click', function() {
-        const audioFile = document.getElementById('audioInput').files[0];
-        if (!audioFile || filtroSeleccionado === "") {
-            alert("Por favor, sube un audio y selecciona un filtro.");
+        const audioFile = audioInput.files[0];
+        if (!audioFile && !audioGrabadoBlob) {
+            alert("Por favor, sube un audio o graba uno antes de continuar.");
+            return;
+        }
+        if (filtroSeleccionado === "") {
+            alert("Por favor, selecciona un filtro.");
             return;
         }
 
         const formData = new FormData();
-        formData.append('audio', audioFile);
+        if (audioFile) {
+            formData.append('audio', audioFile);
+        } else if (audioGrabadoBlob) {
+            formData.append('audio', audioGrabadoBlob, 'grabacion.wav');
+        }
+        
         formData.append('filtro', filtroSeleccionado);
-
         const btn = this;
         btn.innerHTML = 'Procesando...';
         btn.disabled = true;
 
-        // Petición al servidor Python
-        fetch('/procesar', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.blob())
+        fetch('/procesar', { method: 'POST', body: formData })
+        .then(response => { if (!response.ok) throw new Error('Error'); return response.blob(); })
         .then(blob => {
             const url = window.URL.createObjectURL(blob);
-            const audioReproductor = document.getElementById('audioReproductor');
+            document.getElementById('audioReproductor').src = url;
             const descargaLink = document.querySelector('#resultado a');
-
-            // Configurar reproductor y botón de descarga
-            audioReproductor.src = url;
             descargaLink.href = url;
             descargaLink.download = "mi_audio_editado.wav";
-
             document.getElementById('nombreFiltroAplicado').innerText = filtroSeleccionado;
             document.getElementById('resultado').style.display = 'block';
-            
             btn.innerHTML = '<i class="bi bi-magic me-2"></i>Aplicar Filtro';
             btn.disabled = false;
         })
         .catch(error => {
             console.error('Error:', error);
+            alert("Ocurrió un error.");
+            btn.innerHTML = '<i class="bi bi-magic me-2"></i>Aplicar Filtro';
             btn.disabled = false;
         });
     });
-
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
